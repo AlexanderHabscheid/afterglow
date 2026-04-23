@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from enum import Enum
 
 from .models import (
     ComfortSignal,
@@ -38,6 +39,12 @@ class CheckInMessageComposer:
 
 
 class SMSReplyNormalizer:
+    @staticmethod
+    def _enum_value(value: object) -> str:
+        if isinstance(value, Enum):
+            return str(value.value)
+        return str(value)
+
     def normalize(self, payload: dict[str, object]) -> DebriefSubmission:
         rating = payload.get("rating", payload.get("date_rating"))
         if rating is None:
@@ -47,9 +54,9 @@ class SMSReplyNormalizer:
             match_id=str(payload["match_id"]),
             user_id=str(payload["user_id"]),
             date_rating=int(rating),  # type: ignore[arg-type]
-            energy=EnergySignal(str(payload["energy"])),
-            curiosity=CuriositySignal(str(payload["curiosity"])),
-            comfort=ComfortSignal(str(payload["comfort"])),
-            follow_up_intent=FollowUpIntent(str(payload["follow_up_intent"])),
+            energy=EnergySignal(self._enum_value(payload["energy"])),
+            curiosity=CuriositySignal(self._enum_value(payload["curiosity"])),
+            comfort=ComfortSignal(self._enum_value(payload["comfort"])),
+            follow_up_intent=FollowUpIntent(self._enum_value(payload["follow_up_intent"])),
             note=str(payload.get("note", "")),
         )

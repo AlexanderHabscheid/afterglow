@@ -3,10 +3,30 @@ from __future__ import annotations
 import os
 import unittest
 
+from afterglow.models import ComfortSignal, CuriositySignal, EnergySignal, FollowUpIntent
+from afterglow.sms import SMSReplyNormalizer
 from afterglow.twilio import TwilioConfig, parse_afterglow_reply
 
 
 class TwilioIntegrationTests(unittest.TestCase):
+    def test_sms_reply_normalizer_accepts_enum_instances(self) -> None:
+        payload = SMSReplyNormalizer().normalize(
+            {
+                "match_id": "match-003",
+                "user_id": "avery",
+                "rating": 4,
+                "energy": EnergySignal.STEADY,
+                "curiosity": CuriositySignal.INTERESTED,
+                "comfort": ComfortSignal.OPEN,
+                "follow_up_intent": FollowUpIntent.YES,
+                "note": "Still interested.",
+            }
+        )
+
+        self.assertEqual(payload.match_id, "match-003")
+        self.assertEqual(payload.energy, EnergySignal.STEADY)
+        self.assertEqual(payload.follow_up_intent, FollowUpIntent.YES)
+
     def test_parses_compact_sms_reply_with_phone_lookup(self) -> None:
         payload = parse_afterglow_reply(
             "5 charged interested open yes",
