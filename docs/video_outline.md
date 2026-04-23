@@ -18,13 +18,13 @@ Run the API and open the founder surface:
 
 ```bash
 cd "/Users/ahabscheid/dev/AI PROJECTS/Afterglow"
-PYTHONPATH=src uvicorn afterglow.api:app --reload --port 8000
+PYTHONPATH=src uvicorn afterglow.api:app --reload --port 8017
 ```
 
 Open:
 
-- `http://127.0.0.1:8000/demo/founder-surface`
-- `http://127.0.0.1:8000/demo/check-in`
+- `http://127.0.0.1:8017/demo/founder-surface`
+- `http://127.0.0.1:8017/demo/check-in`
 
 Call out:
 

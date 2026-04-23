@@ -160,14 +160,14 @@ To show the founder-facing product surface locally:
 
 ```bash
 cd "/Users/ahabscheid/dev/AI PROJECTS/Afterglow"
-PYTHONPATH=src uvicorn afterglow.api:app --reload --port 8000
+PYTHONPATH=src uvicorn afterglow.api:app --reload --port 8017
 ```
 
 Then open:
 
 ```text
-http://127.0.0.1:8000/demo/founder-surface
-http://127.0.0.1:8000/demo/check-in
+http://127.0.0.1:8017/demo/founder-surface
+http://127.0.0.1:8017/demo/check-in
 ```
 
 ## One-command terminal showcase
@@ -270,7 +270,7 @@ cd "/Users/ahabscheid/dev/AI PROJECTS/Afterglow" && ./scripts/send_twilio_cli_de
 To receive real replies, run the API in another terminal:
 
 ```bash
-cd "/Users/ahabscheid/dev/AI PROJECTS/Afterglow" && PYTHONPATH=src uvicorn afterglow.api:app --reload --port 8000
+cd "/Users/ahabscheid/dev/AI PROJECTS/Afterglow" && PYTHONPATH=src uvicorn afterglow.api:app --reload --port 8017
 ```
 
 Expose that local server with a tunnel and configure the Twilio inbound webhook to:

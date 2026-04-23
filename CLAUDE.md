@@ -15,7 +15,7 @@ The core feature is:
 
 ## Main entry points
 
-- API: `PYTHONPATH=src uvicorn afterglow.api:app --reload --port 8000`
+- API: `PYTHONPATH=src uvicorn afterglow.api:app --reload --port 8017`
 - CLI: `PYTHONPATH=src python3 -m afterglow.cli --help`
 - Showcase: `./scripts/showcase.sh`
 - Tests: `PYTHONPATH=src python3 -m unittest discover -s tests`
