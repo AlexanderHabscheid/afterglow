@@ -1,0 +1,94 @@
+[
+  {
+    "name": "strong_mutual_interest",
+    "match": {
+      "match_id": "fixture-001",
+      "user_a_id": "avery",
+      "user_b_id": "lena",
+      "venue_name": "Campanile sunset loop",
+      "completed_at": "2026-04-21T18:30:00+00:00"
+    },
+    "submissions": [
+      {
+        "user_id": "avery",
+        "date_rating": 4,
+        "energy": "charged",
+        "curiosity": "obsessed",
+        "comfort": "open",
+        "follow_up_intent": "yes"
+      },
+      {
+        "user_id": "lena",
+        "date_rating": 5,
+        "energy": "charged",
+        "curiosity": "interested",
+        "comfort": "fully-safe",
+        "follow_up_intent": "yes"
+      }
+    ],
+    "expected": {
+      "follow_up_action": "offer-second-date",
+      "finalized_reason": "complete",
+      "conflict_flag": false
+    }
+  },
+  {
+    "name": "conflicting_ratings",
+    "match": {
+      "match_id": "fixture-002",
+      "user_a_id": "maya",
+      "user_b_id": "zoe",
+      "venue_name": "North gate cafe",
+      "completed_at": "2026-04-21T19:00:00+00:00"
+    },
+    "submissions": [
+      {
+        "user_id": "maya",
+        "date_rating": 5,
+        "energy": "charged",
+        "curiosity": "obsessed",
+        "comfort": "open",
+        "follow_up_intent": "yes"
+      },
+      {
+        "user_id": "zoe",
+        "date_rating": 2,
+        "energy": "drained",
+        "curiosity": "flat",
+        "comfort": "guarded",
+        "follow_up_intent": "no"
+      }
+    ],
+    "expected": {
+      "follow_up_action": "quiet-learn",
+      "finalized_reason": "complete",
+      "conflict_flag": true
+    }
+  },
+  {
+    "name": "one_sided_timeout",
+    "match": {
+      "match_id": "fixture-003",
+      "user_a_id": "nina",
+      "user_b_id": "leo",
+      "venue_name": "Library walk",
+      "completed_at": "2026-04-21T20:00:00+00:00"
+    },
+    "submissions": [
+      {
+        "user_id": "nina",
+        "date_rating": 4,
+        "energy": "steady",
+        "curiosity": "interested",
+        "comfort": "open",
+        "follow_up_intent": "maybe"
+      }
+    ],
+    "finalize_reason": "timeout",
+    "expected": {
+      "follow_up_action": "quiet-learn",
+      "finalized_reason": "timeout",
+      "conflict_flag": false
+    }
+  }
+]

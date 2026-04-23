@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "afterglow": {
+      "command": "/Users/ahabscheid/dev/AI PROJECTS/Afterglow/scripts/afterglow.sh",
+      "args": ["mcp"],
+      "env": {
+        "PYTHONPATH": "/Users/ahabscheid/dev/AI PROJECTS/Afterglow/src"
+      }
+    }
+  }
+}
