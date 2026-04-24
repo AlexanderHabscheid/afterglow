@@ -21,10 +21,11 @@ class APILoggingTests(unittest.TestCase):
             )
 
         logged_line = mock_print.call_args.args[0]
-        self.assertIn("channel=ui", logged_line)
-        self.assertIn("user=avery", logged_line)
-        self.assertIn("status=pending", logged_line)
-        self.assertIn("received_submissions=1", logged_line)
+        self.assertIn("AFTERGLOW CHECK-IN", logged_line)
+        self.assertIn("channel: ui", logged_line)
+        self.assertIn("user:    avery", logged_line)
+        self.assertIn("status:  pending", logged_line)
+        self.assertIn("count:   1 submission(s)", logged_line)
 
     def test_finalized_check_in_logs_score_and_follow_up(self) -> None:
         with patch("builtins.print") as mock_print:
@@ -38,14 +39,16 @@ class APILoggingTests(unittest.TestCase):
                     "follow_up_action": "offer-second-date",
                     "average_rating": 4.5,
                     "finalized_reason": "complete",
+                    "follow_up_summary": "Enough traction to tee up a second date.",
                 },
             )
 
         logged_line = mock_print.call_args.args[0]
-        self.assertIn("status=finalized", logged_line)
-        self.assertIn("score=87", logged_line)
-        self.assertIn("follow_up=offer-second-date", logged_line)
-        self.assertIn("avg_rating=4.5", logged_line)
+        self.assertIn("status:  finalized", logged_line)
+        self.assertIn("score:   87", logged_line)
+        self.assertIn("action:  offer-second-date", logged_line)
+        self.assertIn("average: 4.5", logged_line)
+        self.assertIn("summary: Enough traction to tee up a second date.", logged_line)
 
 
 if __name__ == "__main__":

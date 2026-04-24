@@ -72,32 +72,39 @@ class ProviderDeliveryPayload(BaseModel):
 def _print_check_in_result(*, channel: str, user_id: str, result: dict[str, object]) -> None:
     status = str(result.get("status", "unknown"))
     match_id = str(result.get("match_id", "unknown"))
+    lines = [
+        "",
+        "================ AFTERGLOW CHECK-IN ================",
+        f"channel: {channel}",
+        f"user:    {user_id}",
+        f"match:   {match_id}",
+        f"status:  {status}",
+    ]
 
     if status == "finalized":
-        print(
-            "[afterglow outcome] "
-            f"channel={channel} "
-            f"user={user_id} "
-            f"match={match_id} "
-            f"status={status} "
-            f"score={result.get('match_update_score')} "
-            f"follow_up={result.get('follow_up_action')} "
-            f"avg_rating={result.get('average_rating')} "
-            f"reason={result.get('finalized_reason')}",
-            flush=True,
+        lines.extend(
+            [
+                f"score:   {result.get('match_update_score')}",
+                f"average: {result.get('average_rating')}",
+                f"action:  {result.get('follow_up_action')}",
+                f"reason:  {result.get('finalized_reason')}",
+            ]
         )
+        summary = result.get("follow_up_summary")
+        if summary:
+            lines.append(f"summary: {summary}")
+        lines.append("===================================================")
+        print("\n".join(lines), flush=True)
         return
 
-    print(
-        "[afterglow outcome] "
-        f"channel={channel} "
-        f"user={user_id} "
-        f"match={match_id} "
-        f"status={status} "
-        f"received_submissions={result.get('received_submissions', 0)} "
-        f"message={result.get('message', '')}",
-        flush=True,
+    lines.extend(
+        [
+            f"count:   {result.get('received_submissions', 0)} submission(s)",
+            f"message: {result.get('message', '')}",
+            "===================================================",
+        ]
     )
+    print("\n".join(lines), flush=True)
 
 
 @app.get("/health")
