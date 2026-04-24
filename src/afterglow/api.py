@@ -69,6 +69,37 @@ class ProviderDeliveryPayload(BaseModel):
     provider_status: str | None = None
 
 
+def _print_check_in_result(*, channel: str, user_id: str, result: dict[str, object]) -> None:
+    status = str(result.get("status", "unknown"))
+    match_id = str(result.get("match_id", "unknown"))
+
+    if status == "finalized":
+        print(
+            "[afterglow outcome] "
+            f"channel={channel} "
+            f"user={user_id} "
+            f"match={match_id} "
+            f"status={status} "
+            f"score={result.get('match_update_score')} "
+            f"follow_up={result.get('follow_up_action')} "
+            f"avg_rating={result.get('average_rating')} "
+            f"reason={result.get('finalized_reason')}",
+            flush=True,
+        )
+        return
+
+    print(
+        "[afterglow outcome] "
+        f"channel={channel} "
+        f"user={user_id} "
+        f"match={match_id} "
+        f"status={status} "
+        f"received_submissions={result.get('received_submissions', 0)} "
+        f"message={result.get('message', '')}",
+        flush=True,
+    )
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
@@ -118,12 +149,16 @@ def open_check_in(match_id: str) -> dict[str, object]:
 @app.post("/debriefs")
 def submit_debrief(payload: DebriefPayload) -> dict[str, object]:
     submission = DebriefSubmission(**payload.model_dump())
-    return service.submit_debrief(submission)
+    result = service.submit_debrief(submission)
+    _print_check_in_result(channel="ui", user_id=submission.user_id, result=result)
+    return result
 
 
 @app.post("/debriefs/sms-reply")
 def submit_sms_reply(payload: SMSReplyPayload) -> dict[str, object]:
-    return service.receive_sms_reply(payload.model_dump())
+    result = service.receive_sms_reply(payload.model_dump())
+    _print_check_in_result(channel="sms-api", user_id=payload.user_id, result=result)
+    return result
 
 
 @app.get("/integrations/sms/outbox")
@@ -166,7 +201,11 @@ async def receive_twilio_inbound(request: Request) -> Response:
         )
         result = service.receive_sms_reply(payload)
         logger.info("Afterglow processed Twilio reply result=%s", result.get("status"))
-        print(f"[afterglow result] {result.get('status')} match={result.get('match_id')}", flush=True)
+        _print_check_in_result(
+            channel="twilio",
+            user_id=str(payload.get("user_id", "unknown")),
+            result=result,
+        )
         twiml = "<Response><Message>Got it. Afterglow saved your check-in.</Message></Response>"
     except Exception as error:
         logger.exception("Afterglow could not process Twilio reply")
